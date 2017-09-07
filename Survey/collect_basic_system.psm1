@@ -3,15 +3,8 @@ function Get-Time {
 
     $return.datetime = Get-Date -Format U
     $return.timezone = [timezoneinfo]::GetSystemTimeZones() | select id
-    $return.uptime = Get-Uptime
+    $return.uptime = Collect-Uptime
     return $return
-}
-
-function Get-Uptime {
-   $os = Get-WmiObject win32_operatingsystem
-   $uptime = (Get-Date) - ($os.ConvertToDateTime($os.lastbootuptime))
-   $DisplayUptime = "Uptime: " + $Uptime.Days + " days, " + $Uptime.Hours + " hours, " + $Uptime.Minutes + " minutes" 
-   return $DisplayUptime
 }
 
 function Get-Version {
@@ -31,6 +24,13 @@ function Get-Hardware {
     $return.ProcessorModel = $CPUInfo.Description
     $return.Memory = Get-WmiObject CIM_PhysicalMemory | Measure-Object -Property capacity -Sum | % { [Math]::Round(($_.sum / 1GB), 2) }
     return $return
+}
+
+function Collect-Uptime {
+   $os = Get-WmiObject win32_operatingsystem
+   $uptime = (Get-Date) - ($os.ConvertToDateTime($os.lastbootuptime))
+   $DisplayUptime = "Uptime: " + $Uptime.Days + " days, " + $Uptime.Hours + " hours, " + $Uptime.Minutes + " minutes" 
+   return $DisplayUptime
 }
 
 Export-ModuleMember -Function 'Get-*'

@@ -14,9 +14,12 @@ try {
     #Write-Output $time.uptime
 
     $cpu = Get-Hardware
-
     #Write-Output $cpu.ProcessorModel
     #Write-Output $cpu.Memory
+
+    $drives = Get-Drives
+    Write-Output $drives
+
 }
 finally {
     Write-Output "Done! $($stopwatch.Elapsed)"
