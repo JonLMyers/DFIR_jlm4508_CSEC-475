@@ -15,12 +15,12 @@ try
     #Write-Output $time.uptime
 
     $cpu = Get-Hardware
-    Write-Output $cpu.ProcessorName
+
+    foreach($drive in $cpu.Drives) {
+        Write-Output $drive
+    }
     #Write-Output $cpu.ProcessorModel
     #Write-Output $cpu.Memory
-
-    $drivesinfo = Get-DiskInfo
-    Write-Output $drivesinfo.a
 }
 finally
 {
