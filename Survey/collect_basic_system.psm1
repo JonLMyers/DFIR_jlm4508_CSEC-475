@@ -33,4 +33,11 @@ function Collect-Uptime {
    return $DisplayUptime
 }
 
+function print_table ($name, $table) {
+    $str = $table | Out-String
+    Write-Output $name
+    Write-Output $str
+}
+
 Export-ModuleMember -Function 'Get-*'
+Export-ModuleMember -Function 'print*'

@@ -8,25 +8,60 @@ try {
     Import-Module $PSScriptRoot\collect_basic_system.psm1
     Import-Module $PSScriptRoot\collect_drives.psm1
     Import-Module $PSScriptRoot\collect_DomainController.psm1
+    Import-Module $PSScriptRoot\collect_software.psm1
+    Import-Module $PSScriptRoot\collect_documents.psm1
+    Import-Module $PSScriptRoot\collect_networking
 
-    $time = Get-Time
-    Write-Output "Time: " $time.datetime
-    #Write-Output "Timezone: " $time.timezone
-    #Write-Output $time.uptime
+    $MakeCSV = $false
+    $SendEmail = $false
+    $EmailUserCreds = "Test"
+    $EmailServer = "Test"
 
-    $cpu = Get-Hardware
-    #Write-Output $cpu.ProcessorModel
-    #Write-Output $cpu.Memory
+    $CSVArray = New-Object System.Collections.ArrayList
+    # I should have broken the modules into the tables I wanted to print.  Oh well.
+    $Time = Get-Time
+    $CSVArray.Add($Time)
+    print_table "Time" $Time
 
-    $drives = Get-Drives
-    Write-Output $drives
+    $Version = Get-Version
+    $CSVArray.Add($Version)
+    print_table "Version" $Version
+
+    $Hardware = Get-Hardware
+    $CSVArray.Add($Hardware)
+    print_table "Hardware" $Hardware
+
+    $Drives = Get-Drives
+    $CSVArray.Add($Drives)
+    print_table "Drives" $Drives
 
     $Domain = Get-Domain
-    Write-Output $Domain.dns
+    $CSVArray.Add($Domain)
+    print_table "Domain Information" $Domain
 
-    $LocalUsers = Get-Users
-    Write-Output $LocalUsers
+    $Users = Get-Users
+    $CSVArray.Add($Users)
+    print_table "User Information" $Users
 
+    $Networking = Get-Networking
+    $CSVArray.Add($Networking)
+    print_table "Network Information" $Networking
+    
+    $Software = Get-Software
+    $CSVArray.Add($Software)
+    print_table "Software Information" $Software
+
+    $Docs = Get-DocArtifacts
+    $CSVArray.Add($Docs)
+    print_table "Documents" $Docs
+
+    if ($MakeCSV -ne $false) {
+        $CSVArray | Export-Csv $scriptDir\survey.csv
+    }
+
+    if ($SendEmail -ne $false) {
+        #Send-MailMessage 
+    }
 }
 finally {
     Write-Output "Done! $($stopwatch.Elapsed)"
