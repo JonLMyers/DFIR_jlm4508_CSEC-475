@@ -7,6 +7,7 @@ $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 try {
     Import-Module $PSScriptRoot\collect_basic_system.psm1
     Import-Module $PSScriptRoot\collect_drives.psm1
+    Import-Module $PSScriptRoot\collect_DomainController.psm1
 
     $time = Get-Time
     Write-Output "Time: " $time.datetime
@@ -19,6 +20,12 @@ try {
 
     $drives = Get-Drives
     Write-Output $drives
+
+    $Domain = Get-Domain
+    Write-Output $Domain.dns
+
+    $LocalUsers = Get-Users
+    Write-Output $LocalUsers
 
 }
 finally {
